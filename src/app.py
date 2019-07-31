@@ -43,17 +43,9 @@ class Twitter(object):
         #     'total_bytes': self.file_size,
         #     'media_type': self.mime,
         # }
-        params = {
-            'status': 'What u doing, stupid!'
-        }
 
-        # Set Authorization header
-        headers = {
-            'Authorization': self.header,
-        }
         # print(self.header)
-        resp = requests.post(self.update_status,
-                             params=params, headers=headers)
+        resp = requests.post(self.update_status)
         print(resp.json(), resp.url)
         return 1
 
