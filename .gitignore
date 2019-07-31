@@ -1,2 +1,4 @@
 .env
 creds.json
+.vscode
+__pycache__
