@@ -41,8 +41,6 @@ class Auth(object):
         else:
             self.get_token()
 
-        print(f'You are tweeting as, {self.screen_name}')
-
     # Get an access token
     def get_token(self):
         # Get a request token
@@ -66,11 +64,23 @@ class Auth(object):
                               resource_owner_secret=resource_owner_secret,
                               verifier=verifier)
         oauth_tokens = oauth.fetch_access_token(self.access_token_url)
-        resource_owner_key = oauth_tokens.get('oauth_token')
-        resource_owner_secret = oauth_tokens.get('oauth_token_secret')
+        self.oauth_token = oauth_tokens.get('oauth_token')
+        self.oauth_token_secret = oauth_tokens.get('oauth_token_secret')
         self.screen_name = oauth_tokens.get('screen_name')
         print(oauth_tokens, self.screen_name)
 
         # Save the token
         with open(self.creds_path, 'w') as f:
             json.dump(oauth_tokens, f)
+
+    # Set a client to make the request
+    def get_auth(self):
+        client = OAuth1Session(self.consumer_key,
+                               client_secret=self.consumer_secret,
+                               resource_owner_key=self.oauth_token,
+                               resource_owner_secret=self.oauth_token_secret)
+        return client
+
+    # Return the screen name of the authenticated user
+    def get_screen_name(self):
+        return self.screen_name

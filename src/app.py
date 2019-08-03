@@ -26,8 +26,14 @@ class Twitter(object):
         self.update_status = 'https://api.twitter.com/1.1/statuses/update.json'
         self.upload_url = 'https://upload.twitter.com/1.1/media/upload.json'
         self.redirect_url = 'http://localhost:8000'
-        Auth(self.consumer_key, self.consumer_secret)
-        # print(f'You are tweeting as, {self.screen_name}')
+
+        # Handle auth
+        client = Auth(self.consumer_key, self.consumer_secret)
+        self.auth = client.get_auth()
+        self.screen_name = client.get_screen_name()
+
+        # Show the user who is tweeting
+        print(f'You are tweeting as, {self.screen_name}')
 
     # Upload
     def upload(self, url):
@@ -45,7 +51,7 @@ class Twitter(object):
         # }
 
         # print(self.header)
-        resp = requests.post(self.update_status)
+        resp = self.auth.post(self.update_status, params=params)
         print(resp.json(), resp.url)
         return 1
 
@@ -73,4 +79,4 @@ if __name__ == '__main__':
     url = 'https://preview.redd.it/3jpql4kx5oc31.png?width=640&crop=smart&auto=webp&s=874dc48de6107732704ec03fdd58afad2f411737'
     consumer_key = os.getenv('CONSUMER_KEY')
     consumer_secret = os.getenv('CONSUMER_SECRET')
-    Twitter(consumer_key, consumer_secret)
+    Twitter(consumer_key, consumer_secret).upload(url)
