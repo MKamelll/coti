@@ -27,11 +27,22 @@ class Twitter(object):
 
     # Upload
     def upload(self, url):
+        '''
+            * Handle uploading media by first
+              checking the type and calling the appropriate
+              class.
+            
+            :url the url to upload
+            :return None
+        '''
         self.url = url
         mime, file_type, file_size, file_name = self.get_file()
+
+        # Check file type
         if not self.is_it_img(file_type):
             raise Exception('File is not supported yet.')
 
+        # Handle img
         img = ImgHandler(mime, file_type, file_size,
                          file_name, self.auth, self.url, self.status)
         img.init_command()
