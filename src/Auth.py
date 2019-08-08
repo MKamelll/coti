@@ -23,7 +23,7 @@ class Auth(object):
         parser.add_argument('--reset',
                             help='Reset your creds',
                             action='store_true')
-        args = parser.parse_args()
+        args, _ = parser.parse_known_args()
 
         if args.reset:
             self.get_token()

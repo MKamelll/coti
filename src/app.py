@@ -1,9 +1,11 @@
 # Imports
 from ImgHandler import ImgHandler
+from OtherMediaHandler import OtherMediaHandler
 from dotenv import load_dotenv
 from Auth import Auth
 import requests
 import time
+import sys
 import os
 import re
 load_dotenv()
@@ -31,7 +33,7 @@ class Twitter(object):
             * Handle uploading media by first
               checking the type and calling the appropriate
               class.
-            
+
             :url the url to upload
             :return None
         '''
@@ -40,7 +42,8 @@ class Twitter(object):
 
         # Check file type
         if not self.is_it_img(file_type):
-            raise Exception('File is not supported yet.')
+            OtherMediaHandler(mime, file_type, file_size,
+                              file_name, self.auth, self.url, self.status)
 
         # Handle img
         img = ImgHandler(mime, file_type, file_size,
@@ -100,9 +103,18 @@ class Twitter(object):
         return False
 
 
+# main
+def main():
+    if len(sys.argv) >= 2:
+        url = sys.argv[1]
+        consumer_key = os.getenv('CONSUMER_KEY')
+        consumer_secret = os.getenv('CONSUMER_SECRET')
+        Twitter(consumer_key, consumer_secret).upload(url)
+    else:
+        print('----------------> USE tweet ["URL"] <----------------')
+        sys.exit(0)
+
+
 # Run
 if __name__ == '__main__':
-    url = 'https://preview.redd.it/imt80l92nde31.jpg?width=960&crop=smart&auto=webp&s=bd9e2f442b835c536ed4b2de83236f96c4d7be6c'
-    consumer_key = os.getenv('CONSUMER_KEY')
-    consumer_secret = os.getenv('CONSUMER_SECRET')
-    Twitter(consumer_key, consumer_secret).upload(url)
+    main()
