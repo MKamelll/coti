@@ -2,6 +2,7 @@
 from requests_oauthlib import OAuth1Session
 import argparse
 import json
+import sys
 import os
 
 
@@ -14,19 +15,20 @@ class Auth(object):
         self.access_token_url = 'https://api.twitter.com/oauth/access_token'
         self.authorize_url = 'https://api.twitter.com/oauth/authorize'
         self.creds_path = os.path.join(os.path.curdir, 'creds.json')
-        self.is_reset()
+        self.is_add()
 
     # Check for reset
-    def is_reset(self):
+    def is_add(self):
         # Check arguments
         parser = argparse.ArgumentParser()
-        parser.add_argument('--reset',
+        parser.add_argument('--add',
                             help='Reset your creds',
                             action='store_true')
         args, _ = parser.parse_known_args()
 
-        if args.reset:
+        if args.add:
             self.get_token()
+            sys.exit(0)
         else:
             self.is_already_user()
 
@@ -39,6 +41,7 @@ class Auth(object):
                 self.oauth_token_secret = cred_file['oauth_token_secret']
                 self.screen_name = cred_file['screen_name']
         else:
+            print('You are not registered')
             self.get_token()
 
     # Get an access token
@@ -67,7 +70,6 @@ class Auth(object):
         self.oauth_token = oauth_tokens.get('oauth_token')
         self.oauth_token_secret = oauth_tokens.get('oauth_token_secret')
         self.screen_name = oauth_tokens.get('screen_name')
-        print(oauth_tokens, self.screen_name)
 
         # Save the token
         with open(self.creds_path, 'w') as f:
