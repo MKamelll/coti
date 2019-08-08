@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 # Imports
-from ImgHandler import ImgHandler
-from OtherMediaHandler import OtherMediaHandler
+from .ImgHandler import ImgHandler
+from .OtherMediaHandler import OtherMediaHandler
 from dotenv import load_dotenv
-from Auth import Auth
+from .Auth import Auth
 import requests
 import time
 import sys
